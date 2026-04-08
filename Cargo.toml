@@ -1,0 +1,51 @@
+[package]
+name = "cudagrep"
+version = "0.1.0"
+edition = "2021"
+authors = ["Corum Collective LLC <contact@santh.io>"]
+description = "Safe Rust bindings for GPUDirect Storage zero-copy NVMe-to-GPU transfers"
+license = "MIT"
+repository = "https://github.com/santhsecurity/Santh"
+readme = "README.md"
+rust-version = "1.76"
+keywords = ["cuda", "gds", "nvme", "gpu", "storage"]
+categories = ["api-bindings", "hardware-support"]
+homepage = "https://github.com/santhsecurity/cudagrep"
+documentation = "https://docs.rs/cudagrep"
+include = ["src/**/*", "Cargo.toml", "Cargo.lock", "README.md", "LICENSE", "CONTRIBUTING.md", "CHANGELOG.md", "benches/**/*", "tests/**/*", "fuzz/**/*"]
+
+[features]
+default = []
+cuda = []
+
+[dependencies]
+libc = "0.2.184"
+libloading = "0.8"
+thiserror = "2"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["fmt"] }
+
+[dev-dependencies]
+criterion = { version = "0.5", features = ["html_reports"] }
+proptest = "1.8.0"
+tempfile = "3.27.0"
+
+[[bench]]
+name = "mock_throughput"
+harness = false
+
+[[bench]]
+name = "legendary_bench"
+harness = false
+
+[lints.rust]
+missing_docs = "warn"
+
+[lints.clippy]
+unwrap_used = "warn"
+expect_used = "warn"
+todo = "deny"
+unimplemented = "deny"
+panic = "warn"
+too_many_lines = "allow"
+pedantic = { level = "warn", priority = -1 }

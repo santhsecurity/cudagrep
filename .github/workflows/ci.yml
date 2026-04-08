@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: -Dwarnings
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        rust: [stable, nightly]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.rust }}
+          components: clippy
+      # Test WITHOUT cuda feature (software-only path)
+      - name: Test without cuda feature
+        run: cargo test --no-default-features
+      - name: Test legendary suite
+        run: cargo test --test legendary --no-default-features
+      - name: Clippy without cuda feature
+        run: cargo clippy --no-default-features -- -D warnings -W clippy::pedantic
+      - name: Check with cuda feature (compile only)
+        run: cargo check --features cuda
+
+  # GPU tests require self-hosted runners with NVIDIA hardware.
+  # Enable this job when GPU CI runners are available.
+  # test-cuda:
+  #   runs-on: [self-hosted, gpu]
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: dtolnay/rust-toolchain@stable
+  #     - run: cargo test --features cuda
+
+  fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+      - run: cargo fmt --check
+
+  doc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      # Check documentation without cuda feature
+      - name: Build documentation
+        run: cargo doc --no-deps --no-default-features
+        env:
+          RUSTDOCFLAGS: -Dwarnings
+      # Also check with cuda feature
+      - name: Build documentation with cuda feature
+        run: cargo doc --no-deps --features cuda
+        env:
+          RUSTDOCFLAGS: -Dwarnings
+
+  # Run benchmarks to ensure they compile (but don't run them in CI)
+  bench-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Check benchmarks compile
+        run: cargo check --benches --no-default-features

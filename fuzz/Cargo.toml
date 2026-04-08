@@ -1,0 +1,18 @@
+[package]
+name = "cudagrep-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+repository = "https://github.com/santhsecurity/cudagrep"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+cudagrep = { path = ".." }
+
+[[bin]]
+name = "fuzz_hardware_detection"
+path = "fuzz_targets/fuzz_hardware_detection.rs"
+doc = false
