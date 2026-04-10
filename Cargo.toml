@@ -5,7 +5,7 @@ edition = "2021"
 authors = ["Corum Collective LLC <contact@santh.io>"]
 description = "Safe Rust bindings for GPUDirect Storage zero-copy NVMe-to-GPU transfers"
 license = "MIT"
-repository = "https://github.com/santhsecurity/cudagrep"
+repository = "https://github.com/santhsecurity/Santh"
 readme = "README.md"
 rust-version = "1.76"
 keywords = ["cuda", "gds", "nvme", "gpu", "storage"]
@@ -41,11 +41,87 @@ harness = false
 [lints.rust]
 missing_docs = "warn"
 
-[lints.clippy]
-unwrap_used = "warn"
-expect_used = "warn"
-todo = "deny"
-unimplemented = "deny"
-panic = "warn"
-too_many_lines = "allow"
-pedantic = { level = "warn", priority = -1 }
+[[test]]
+name = "unit_legendary"
+path = "tests/unit/legendary.rs"
+
+[[test]]
+name = "unit"
+path = "tests/unit/mod.rs"
+
+[[test]]
+name = "unit_regression_suite"
+path = "tests/unit/regression_suite.rs"
+
+[[test]]
+name = "unit_structural_suite"
+path = "tests/unit/structural_suite.rs"
+
+[[test]]
+name = "unit_test_legendary_gap"
+path = "tests/unit/test_legendary_gap.rs"
+
+[[test]]
+name = "unit_test_legendary_unit"
+path = "tests/unit/test_legendary_unit.rs"
+
+[[test]]
+name = "adversarial_adversarial_gds"
+path = "tests/adversarial/adversarial_gds.rs"
+
+[[test]]
+name = "adversarial_alignment_boundary"
+path = "tests/adversarial/alignment_boundary.rs"
+
+[[test]]
+name = "adversarial_break_it"
+path = "tests/adversarial/break_it.rs"
+
+[[test]]
+name = "adversarial_buffer_alignment"
+path = "tests/adversarial/buffer_alignment.rs"
+
+[[test]]
+name = "adversarial_cache_eviction"
+path = "tests/adversarial/cache_eviction.rs"
+
+[[test]]
+name = "adversarial_dma_safety"
+path = "tests/adversarial/dma_safety.rs"
+
+[[test]]
+name = "adversarial_fallback_behavior"
+path = "tests/adversarial/fallback_behavior.rs"
+
+[[test]]
+name = "adversarial_gpu_detection"
+path = "tests/adversarial/gpu_detection.rs"
+
+[[test]]
+name = "adversarial_invalid_fd"
+path = "tests/adversarial/invalid_fd.rs"
+
+[[test]]
+name = "adversarial"
+path = "tests/adversarial/mod.rs"
+
+[[test]]
+name = "adversarial_sqlite_adversarial_suite"
+path = "tests/adversarial/sqlite_adversarial_suite.rs"
+
+[[test]]
+name = "adversarial_test_legendary_adversarial"
+path = "tests/adversarial/test_legendary_adversarial.rs"
+
+[[test]]
+name = "integration"
+path = "tests/integration/mod.rs"
+
+[[test]]
+name = "property"
+path = "tests/property/mod.rs"
+
+[[test]]
+name = "property_test_legendary_property"
+path = "tests/property/test_legendary_property.rs"
+

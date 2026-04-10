@@ -111,6 +111,16 @@ impl CuFileHardware {
                 });
             }
 
+            // A faulty driver may report more bytes than requested for this
+            // iteration (`chunk`), which would corrupt accounting and can wrap
+            // `remaining` on subtraction. Reject before touching totals.
+            if bytes > chunk {
+                return Err(CudaError::ShortRead {
+                    requested: size,
+                    transferred: total,
+                });
+            }
+
             if bytes < chunk {
                 return Err(CudaError::ShortRead {
                     requested: size,
@@ -118,11 +128,14 @@ impl CuFileHardware {
                 });
             }
 
+            remaining = remaining.checked_sub(bytes).ok_or(CudaError::ShortRead {
+                requested: size,
+                transferred: total,
+            })?;
             total = total.checked_add(bytes).ok_or(CudaError::ShortRead {
                 requested: size,
                 transferred: total,
             })?;
-            remaining -= bytes;
             let bytes_i64 = i64::try_from(bytes).map_err(|_| CudaError::ShortRead {
                 requested: size,
                 transferred: total,
